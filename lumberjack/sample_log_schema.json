@@ -1,0 +1,18 @@
+{
+    "TimeGenerated": "2022-12-16T17:51:13.331",
+    "ProcessName": "process_name",
+    "ExecutionId": "{process_name}@{process_start_dttm}",
+    "Environment": "DEV | TEST | PRODUCTION",
+    "Status": "SUCCESS | FAIL | IN PROGRESS",
+    "StartTime": "2022-12-16T17:51:13.331",
+    "EndTime": "2022-12-16T17:51:13.331",
+    "ErrorMessage": [],
+    "MLflowURL": "azureml://jobs/<job-id>/outputs/artifacts/<path>",
+    "ExecutionDetails": {
+        "TriggerFile": "",
+        "Source": "",
+        "Target": "",
+        "LogFile": "",
+        "AzureExecutionInstanceId": ""
+    }
+}
