@@ -1,9 +1,9 @@
-# TODO: Fix this import so the class resolves
-from process_metrics import MetricsLogger
 import os
 from time import sleep
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0,parentdir)
+
+from process_metrics import MetricsLogger
 
 metrics_logger = MetricsLogger()
 metrics_logger.setup_metrics(process_name="Sample Process")
