@@ -8,11 +8,7 @@ Usage:
     To use the ProcessMetricsConfig class, create an instance and call its methods.
 
 Example:
-    >>> obj = ProcessMetricsConfig(env_name="p1", process_name="task1411#Staging")
-    >>> obj.process_metrics_template(
-        current_date_utc="20231220122436",
-        execution_id="12345363834"
-    )
+    
 """
 from dataclasses import dataclass
 from functools import cached_property
