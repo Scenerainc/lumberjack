@@ -4,7 +4,7 @@ Example Usage
 -------------
 
 From CMD, navigate into the lumberjack directory and execute:
-    python -m pytest tests/unit/test_process_metrics.py -v
+    python3 -m pytest tests/unit/test_process_metrics.py -v
 """
 from datetime import datetime
 import json
