@@ -1,0 +1,43 @@
+[project]
+name = "lumberjack"
+version = "0.0.1"
+authors = [
+    { name = "placeholder", email = "placeholder@domain.dom" },
+]
+description = "OpenCV video capturing MJPEG Server"
+readme = "README.md"
+classifiers = [
+    "Operating System :: Unix",
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Monitoring",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "azure-monitor-ingestion",
+    "azure-identity",
+]
+#license.file = "" 
+
+[project.urls]
+"Home-page" = "https://github.com/Scenerainc/lumberjack"
+"Bug Tracker" = "https://github.com/Scenerainc/lumberjack/issues"
+
+[tool.setuptools.packages.find]
+include = [
+    "lumberjack*",
+    "docs*"
+
+]
+
+[build-system]
+requires = [
+    "setuptools",
+]
+build-backend = "setuptools.build_meta"
+
