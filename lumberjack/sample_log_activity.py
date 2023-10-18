@@ -1,7 +1,7 @@
 import os
 from time import sleep
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0,parentdir)
+os.sys.path.insert(0, parentdir)
 
 from process_metrics import MetricsLogger
 
