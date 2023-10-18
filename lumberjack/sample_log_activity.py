@@ -10,5 +10,5 @@ metrics_logger.setup_metrics(process_name="Sample Process")
 
 # DO SOMETHING 
 
-metrics_logger.complete_metrics(status="SUCCESS", mlflow_url= "azureml://jobs/<job-id>/outputs/artifacts/<path>")
+metrics_logger.complete_metrics(status="SUCCESS", mlflow_url="azureml://jobs/<job-id>/outputs/artifacts/<path>")
 response = metrics_logger.log()
