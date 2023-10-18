@@ -35,14 +35,13 @@ Azure Log Analytics logging helper library
     - **_Using Terraform:_**
         - The Data Collection Rule and Log Analytics custom table can be independently created, linked, and managed using `azapi` provider (as this functionality is not yet supported in `azurerm` provider). This will also configure the custom log schema.
 1. [Data Collection Endpoint](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#create-data-collection-endpoint)
-1. [Assign **Monitoring Metrics Publisher** permissions to the DCR](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#assign-permissions-to-the-dcr)
+1. [Assign **Monitoring Metrics Publisher** permissions to the Data Collection Rule](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#assign-permissions-to-the-dcr)
     - This permission can be granted to a user (local testing) or a service principle (running live)
     > **_NOTE_** A newly granted permission can take ~10 mins to take effect.
 1. Setup Env Variables (currently hardcoded in [`config.py`](./lumberjack/metrics_config.py))
-    - `rule_id`= [Instructions on where to find the `immutableId` for DCR](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#collect-information-from-the-dcr)
+    - `rule_id`= [The `immutableId` of the Data Collection Rule](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#collect-information-from-the-dcr)
     - `endpoint`= [Logs ingestion URI from the Data Collection Endpoint](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#create-data-collection-endpoint)
-    - `stream_name`= "`Custom-<custom_table_name>_CL`"
-        - TODO: Find the doc that explains this required syntax as it can be a gotcha
+    - `stream_name`= "`Custom-<custom_table_name>`" (must begin with `Custom-` as per [Structure of a data collection rule in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-structure#streamdeclarations))
 
 ### Authenticate
 

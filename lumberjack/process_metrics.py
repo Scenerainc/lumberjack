@@ -27,7 +27,6 @@ class ProcessMetrics:
     time_generated: Optional[str] = None
     process_name: Optional[str] = None
     execution_id: Optional[str] = None
-    # TODO: use literals for env and status strings?
     environment: str = config.environment
     status: str = "IN PROGRESS"
     start_time: Optional[str] = None
@@ -100,7 +99,6 @@ class MetricsLogger(DefaultCredentials):
         Returns:
             None
         """
-        # TODO: helpers and validation functions for time
         start_time = datetime.utcnow().isoformat()
         self.metrics.process_name = process_name
         self.metrics.execution_id = f"{process_name}@{start_time}" # this will be a unique ID
@@ -129,7 +127,6 @@ class MetricsLogger(DefaultCredentials):
         Returns:
             UploadLogsResult: The response for send_logs API.
         """
-        # TODO: Check if this gets populated automatically? Or can it (possibly via use of Transformations)
         self.metrics.time_generated = datetime.utcnow().isoformat()
 
         encoded_metrics = json.dumps(self.metrics, indent=4, cls=ProcessMetricsEncoder)
@@ -143,19 +140,14 @@ class MetricsLogger(DefaultCredentials):
                 failed_logs = response.failed_logs
                 print(failed_logs)
             else:
-                # TODO: Let's revisit this, it always prints status:Success and is not very informative
-                # It is not necessarily a confirmation that the log landed in the table
-                # Just that the server accepted the request 
                 print(f"status:{response.status}")
 
             return response
         except HttpResponseError as err:
             print(f"Unable to upload the metrics: {err}")
-        except KeyError as key:
-            # Is this possible if the metrics object is always created in the same way
-            raise KeyError(f"{key} is missing") from key
         except Exception as ex:
-            raise Exception(f"Unexpected Error : {ex}") from ex
+            print(f"Failed to log, unexpected exception: {ex}")
+            raise ex
 
     def log_error(self, error) -> UploadLogsResult:
         """Build error message and call log().
