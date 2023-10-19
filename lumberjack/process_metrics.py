@@ -35,8 +35,8 @@ class ProcessMetrics:
     time_generated: Optional[str] = None
     process_name: Optional[str] = None
     execution_id: Optional[str] = None
-    environment: str = config.environment
-    status: Optional[str] = None
+    environment: PROCESS_METRICS_ENV = config.environment
+    status: Optional[PROCESS_METRIC_STATUS] = None
     start_time: Optional[str] = None
     end_time: Optional[str]  = None
     error_message: List[str] = field(default_factory=list)
@@ -115,7 +115,7 @@ class MetricsLogger(DefaultCredentials):
         self.metrics.execution_id = f"{process_name}@{start_time}" # this will be a unique ID
         self.metrics.start_time = start_time
         
-    def complete_metrics(self, status: str, mlflow_url: str) -> None:
+    def complete_metrics(self, status: PROCESS_METRIC_STATUS, mlflow_url: str) -> None:
         """Complete metrics object at the end of a process with status and end time.
 
         Args:
