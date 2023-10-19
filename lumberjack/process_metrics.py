@@ -5,6 +5,7 @@ from json import JSONEncoder
 import string
 from typing import List, Optional
 from datetime import datetime
+import logging
 
 from azure.core.exceptions import HttpResponseError
 from azure.monitor.ingestion import LogsIngestionClient, UploadLogsStatus, UploadLogsResult
@@ -13,6 +14,7 @@ from credentials import DefaultCredentials
 from metrics_config import ProcessMetricsConfig
 
 config = ProcessMetricsConfig()
+logging.basicConfig(level=logging.INFO)
 
 @dataclass
 class ProcessMetrics:
@@ -138,16 +140,16 @@ class MetricsLogger(DefaultCredentials):
 
             if response.status != UploadLogsStatus.SUCCESS:
                 failed_logs = response.failed_logs
-                print(failed_logs)
+                logging.warn(failed_logs)
             else:
-                print(f"status:{response.status}")
+                logging.info(f"status:{response.status}")
 
             return response
         except HttpResponseError as err:
-            print(f"Unable to upload the metrics: {err}")
+            logging.error(f"Unable to upload the metrics: {err}")
         except Exception as ex:
-            print(f"Failed to log, unexpected exception: {ex}")
-            raise ex
+            logging.error(f"Failed to log, unexpected exception: {ex}")
+            raise
 
     def log_error(self, error) -> UploadLogsResult:
         """Build error message and call log().
