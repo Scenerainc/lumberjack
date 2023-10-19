@@ -1,17 +1,23 @@
 """Module for logging process metrics In Log Analytics."""
 from dataclasses import dataclass, field
+from datetime import datetime
 import json
 from json import JSONEncoder
-import string
-from typing import List, Optional
-from datetime import datetime
 import logging
+import string
+from typing import List, Literal, Optional
 
 from azure.core.exceptions import HttpResponseError
 from azure.monitor.ingestion import LogsIngestionClient, UploadLogsStatus, UploadLogsResult
 
 from credentials import DefaultCredentials
 from metrics_config import ProcessMetricsConfig
+
+# Literal string union type for process metrics status
+PROCESS_METRIC_STATUS = Literal["IN PROGRESS", "SUCCESS", "FAILURE"]
+
+# Literal string union type for process metrics environment
+PROCESS_METRICS_ENV = Literal["DEV", "TEST", "PROD"]
 
 config = ProcessMetricsConfig()
 logging.basicConfig(level=logging.INFO)
@@ -30,7 +36,7 @@ class ProcessMetrics:
     process_name: Optional[str] = None
     execution_id: Optional[str] = None
     environment: str = config.environment
-    status: str = "IN PROGRESS"
+    status: Optional[str] = None
     start_time: Optional[str] = None
     end_time: Optional[str]  = None
     error_message: List[str] = field(default_factory=list)
@@ -55,8 +61,11 @@ class ProcessMetricsEncoder(JSONEncoder):
         Returns:
             encoded_metrics: encoded metrics
         """
-        # pylint: disable-next=C0301
-        encoded_metrics = {string.capwords(k.replace("_", " ")).replace(" ", ""):v for k,v in o.__dict__.items()}
+        encoded_metrics = {
+            string.capwords(k.replace("_", " ")).replace(" ", ""): v
+            for k, v in o.__dict__.items()
+        }
+
         return encoded_metrics
 
 
@@ -161,4 +170,5 @@ class MetricsLogger(DefaultCredentials):
             UploadLogsResult: The response for send_logs API.
         """
         self.metrics.error_message.append(f"{error}")
+        self.metrics.status = "FAILURE"
         return self.log()

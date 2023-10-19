@@ -9,6 +9,10 @@ metrics_logger = MetricsLogger()
 metrics_logger.setup_metrics(process_name="Sample Process")
 
 # DO SOMETHING 
+process_result = True # Change to False test log_error() scenario
 
-metrics_logger.complete_metrics(status="SUCCESS", mlflow_url= "azureml://jobs/<job-id>/outputs/artifacts/<path>")
-response = metrics_logger.log()
+if process_result:
+    metrics_logger.complete_metrics(status="SUCCESS", mlflow_url= "azureml://jobs/<job-id>/outputs/artifacts/<path>")
+    response = metrics_logger.log()
+else:
+    response = metrics_logger.log_error(error="something broke")

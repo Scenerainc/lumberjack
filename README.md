@@ -6,7 +6,7 @@ Azure Log Analytics logging helper library
 - [Key Features](#key-features)
 - [How To Use](#how-to-use)
   - [Prerequisites](#prerequisites)
-  - [Authenticate](#authenticate)
+  - [Authentication](#authentication)
   - [Run the sample](#run-the-sample)
 - [Packaging and Distribution](#packaging-and-distribution)
 - [Helpful Links](#helpful-links)
@@ -43,7 +43,7 @@ Azure Log Analytics logging helper library
     - `endpoint`= [Logs ingestion URI from the Data Collection Endpoint](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#create-data-collection-endpoint)
     - `stream_name`= "`Custom-<custom_table_name>`" (must begin with `Custom-` as per [Structure of a data collection rule in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-structure#streamdeclarations))
 
-### Authenticate
+### Authentication
 
 This sample uses a call to Azure Identity's `DefaultAzureCredential()` to authenticate the caller. In "live" running services, this should be a Service Principle. In a local run, simply run:
 
