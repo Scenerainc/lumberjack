@@ -1,0 +1,14 @@
+name: run-tests
+on: [push]
+
+jobs:
+  run-all-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.9 # Choose the appropriate Python image/version
+    steps:
+      - uses: actions/checkout@v3
+      - run: pip3 install -r requirements.txt
+      - name: Run Tests
+        run: |
+          ./test.sh
