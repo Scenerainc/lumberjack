@@ -1,2 +1,3 @@
-azure-monitor-ingestion
-azure-identity
+azure-monitor-ingestion==1.0.0b1
+azure-identity==1.4.1
+pytest>=7.1.2
