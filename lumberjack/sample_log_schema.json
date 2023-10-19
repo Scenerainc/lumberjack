@@ -7,7 +7,7 @@
     "StartTime": "2022-12-16T17:51:13.331",
     "EndTime": "2022-12-16T17:51:13.331",
     "ErrorMessage": [],
-    "MLflowURL": "azureml://jobs/<job-id>/outputs/artifacts/<path>",
+    "MlflowUrl": "azureml://jobs/<job-id>/outputs/artifacts/<path>",
     "ExecutionDetails": {
         "TriggerFile": "",
         "Source": "",
