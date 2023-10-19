@@ -10,8 +10,8 @@ from typing import List, Literal, Optional
 from azure.core.exceptions import HttpResponseError
 from azure.monitor.ingestion import LogsIngestionClient, UploadLogsStatus, UploadLogsResult
 
-from credentials import DefaultCredentials
-from metrics_config import ProcessMetricsConfig
+from lumberjack.credentials import DefaultCredentials
+from lumberjack.metrics_config import ProcessMetricsConfig
 
 # Literal string union type for process metrics status
 PROCESS_METRIC_STATUS = Literal["IN PROGRESS", "SUCCESS", "FAILURE"]

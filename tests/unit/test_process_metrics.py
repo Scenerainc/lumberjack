@@ -11,8 +11,8 @@ import json
 from unittest.mock import Mock, ANY
 import pytest
 
-from metrics_config import ProcessMetricsConfig
-from process_metrics import ProcessMetrics, MetricsLogger, ProcessMetricsEncoder
+from lumberjack.metrics_config import ProcessMetricsConfig
+from lumberjack.process_metrics import ProcessMetrics, MetricsLogger, ProcessMetricsEncoder
 from azure.monitor.ingestion import UploadLogsStatus, UploadLogsResult, LogsIngestionClient
 
 config = ProcessMetricsConfig()
