@@ -35,7 +35,7 @@ Azure Log Analytics logging helper library
         > **_NOTE:_** All fields in sample JSON format must follow PascalCase
 
     - **_Using Terraform:_**
-        - The Data Collection Rule and Log Analytics custom table can be independently created, linked, and managed using `azapi` provider (as this functionality is not yet supported in `azurerm` provider). This will also configure the custom log schema.
+        - The Data Collection Rule and Log Analytics custom table can be independently created, linked, and managed using `azurerm` provider. This will also configure the custom log schema.
 2. [Data Collection Endpoint](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#create-data-collection-endpoint)
 3. [Assign **Monitoring Metrics Publisher** permissions to the Data Collection Rule](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/tutorial-logs-ingestion-portal#assign-permissions-to-the-dcr)
     - This permission can be granted to a user (local testing) or a service principle (running live)
