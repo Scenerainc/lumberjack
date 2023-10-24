@@ -2,13 +2,11 @@
 name = "lumberjack"
 version = "0.0.1"
 authors = [
-    { name = "placeholder", email = "placeholder@domain.dom" },
+    { name = "Jack Corrigan", email = "jack.corrigan@microsoft.com" },
 ]
-description = "OpenCV video capturing MJPEG Server"
+description = "Azure Log Analytics logging helper library"
 readme = "README.md"
 classifiers = [
-    "Operating System :: Unix",
-    "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -18,11 +16,13 @@ classifiers = [
     "Topic :: System :: Monitoring",
 ]
 requires-python = ">=3.8"
-dependencies = [
-    "azure-monitor-ingestion",
-    "azure-identity",
-]
-#license.file = "" 
+
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+license.file = "LICENSE" 
 
 [project.urls]
 "Home-page" = "https://github.com/Scenerainc/lumberjack"
@@ -30,9 +30,7 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 include = [
-    "lumberjack*",
-    "docs*"
-
+    "lumberjack*"
 ]
 
 [build-system]
@@ -40,4 +38,3 @@ requires = [
     "setuptools",
 ]
 build-backend = "setuptools.build_meta"
-
