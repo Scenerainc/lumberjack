@@ -3,8 +3,10 @@
 import unittest
 from unittest.mock import Mock
 
-from lumberjack import MetricsLogger
-from lumberjack.process_metrics import ContextLogger
+from lumberjack.process_metrics import (
+    MetricsLogger,
+    ContextLogger,
+)  # pylint: disable=E0401
 
 
 class _Exception(BaseException):
