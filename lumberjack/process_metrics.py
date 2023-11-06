@@ -1,11 +1,13 @@
 """Module for logging process metrics In Log Analytics."""
+from contextlib import AbstractContextManager
 from dataclasses import dataclass, field
 from datetime import datetime
 import json
 from json import JSONEncoder
 import logging
 import string
-from typing import List, Literal, Optional
+from types import TracebackType
+from typing import Any, List, Literal, Optional
 
 from azure.core.exceptions import HttpResponseError
 from azure.monitor.ingestion import LogsIngestionClient, UploadLogsStatus, UploadLogsResult
@@ -68,6 +70,66 @@ class ProcessMetricsEncoder(JSONEncoder):
 
         return encoded_metrics
 
+class ContextLogger(AbstractContextManager):
+    """Context Logger"""
+    suppress: bool
+    _logger: "MetricsLogger"
+    __lock: Any
+
+    def __init__(
+            self,
+            process_name: str,
+            mlflow_url: str = None,
+            suppress: bool = False,
+            lock: Optional[Any] = None
+        ):
+        """Context Logger
+
+        Though one can suppress exceptions in the with block with the suppress key-word argument,
+        this is not intended to replace error handling
+
+        Args:
+            process_name (str): \
+                process name typically in the form of: task-<pipeline>#<process_desc>
+            mlflow_url (str, optional): \
+                url location of the process's MLflow artifacts (logs/metrics/model), by default None
+            suppress (bool, optional): \
+                suppress exceptions, by default False
+            lock : (Lock, optional): \
+                Optional lock for thread safety, by default None
+        """
+        self.process_name = process_name
+        self.suppress = suppress
+        self.mlflow_url = mlflow_url
+        self.__lock = lock
+        self._logger = MetricsLogger()
+
+    def __enter__(self) -> "MetricsLogger":
+        """Enter the context"""
+        if self.__lock:
+            self.__lock.acquire(blocking=True)
+        self._logger.setup_metrics(self.process_name)
+        return self._logger
+
+    def __exit__(
+            self,
+            exc_type: BaseException = None,
+            exc_info: BaseException = None,
+            traceback: TracebackType = None,
+        ) -> bool:
+        """Exit the context"""
+        status = "SUCCESS"
+        exception = any([exc_type, exc_info, traceback])
+        if exception:
+            status = "FAILURE"
+        self._logger.complete_metrics(status=status, mlflow_url=self.mlflow_url)
+        if exception:
+            self._logger.log_error(exc_info)
+        else:
+            self._logger.log()
+        if self.__lock:
+            self.__lock.release()
+        return self.suppress
 
 class MetricsLogger(DefaultCredentials):
     """Class for logging process metrics in Log Analytics.
@@ -100,6 +162,35 @@ class MetricsLogger(DefaultCredentials):
 
         self.log_client = LogsIngestionClient(
             endpoint=self.endpoint, credential=self.default_credentials, logging_enable=True)
+
+    @staticmethod
+    def context(process_name: str, *context_logger_args, **context_logger_kwargs):
+        """Context Logger
+
+        Though one can suppress exceptions in the with block with the suppress key-word argument,
+        this is not intended to replace error handling
+
+        Args:
+            process_name (str): \
+                process name typically in the form of: task-<pipeline>#<process_desc>
+            mlflow_url (str, optional): \
+                url location of the process's MLflow artifacts (logs/metrics/model), by default None
+            suppress (bool, optional): \
+                suppress exceptions, by default False
+            lock : (Lock, optional): \
+                Optional lock for thread safety, by default None
+
+        Example:
+        
+        >>> from lumberjack import MetricsLogger
+        >>> with MetricsLogger.context("run#topic") as metrics_logger:
+        >>>     print(metrics_logger.__class__)
+        <class 'lumberjack.process_metrics.MetricsLogger'>
+
+        """
+        return ContextLogger(process_name, *context_logger_args, **context_logger_kwargs)
+
+
 
     def setup_metrics(self, process_name: str) -> None:
         """Initialize metrics object at the start of a process.
