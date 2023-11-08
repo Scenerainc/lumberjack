@@ -3,32 +3,40 @@
 import unittest
 from unittest.mock import Mock
 
-from lumberjack.process_metrics import (
-    MetricsLogger,
-    ContextLogger,
-)  # pylint: disable=E0401
+# pylint: disable=E0401
+from lumberjack import MetricsLogger
+from lumberjack.utils.context_manager import ContextLogger
+# pylint: enable=E0401
 
 
 class _Exception(BaseException):
-    pass
+    """Test Exception"""
 
 
 class TestMetricLoggerCM(unittest.TestCase):
+    """Context manager tests"""
+
+    def setUp(self):
+        """Mock setup"""
+        self.mock_endpoint = Mock()
+        self.metrics_logger = MetricsLogger()
+        self.metrics_logger.log = self.mock_endpoint
+
     def test_raises(self):
-        # Arrange
-        mock = Mock()
+        """Ensure it doesn't suppress exceptions per default"""
         with self.assertRaises(_Exception):
-            with ContextLogger("test", suppress=False) as logger:
-                setattr(logger, "log", mock)
+            with ContextLogger(self.metrics_logger, "test"):
                 raise _Exception()
-        mock.assert_called()
+        self.mock_endpoint.assert_called()
 
     def test_not_raises(self):
-        mock = Mock()
-        with ContextLogger("test", suppress=True) as logger:
-            setattr(logger, "log", mock)
+        """Test optional parameter 'suppress'"""
+        with ContextLogger(self.metrics_logger, "test", suppress=True):
             raise _Exception()
-        mock.assert_called()
+        self.mock_endpoint.assert_called()
 
-    def test_static_method(self):
-        self.assertIsInstance(MetricsLogger.context("test"), ContextLogger)
+    def test_yielded_instance(self):
+        """Check if the yielded instance is the same as the one it was obtained from"""
+        with self.metrics_logger.context("test") as yielded_metrics_logger:
+            self.assertEqual(self.metrics_logger, yielded_metrics_logger)
+        self.mock_endpoint.assert_called()
