@@ -12,6 +12,7 @@ from azure.monitor.ingestion import LogsIngestionClient, UploadLogsStatus, Uploa
 
 from lumberjack.credentials import DefaultCredentials
 from lumberjack.metrics_config import ProcessMetricsConfig
+from lumberjack.utils.context_manager import ContextLogger
 
 # Literal string union type for process metrics status
 PROCESS_METRIC_STATUS = Literal["IN PROGRESS", "SUCCESS", "FAILURE"]
@@ -68,7 +69,6 @@ class ProcessMetricsEncoder(JSONEncoder):
 
         return encoded_metrics
 
-
 class MetricsLogger(DefaultCredentials):
     """Class for logging process metrics in Log Analytics.
 
@@ -100,6 +100,35 @@ class MetricsLogger(DefaultCredentials):
 
         self.log_client = LogsIngestionClient(
             endpoint=self.endpoint, credential=self.default_credentials, logging_enable=True)
+
+    def context(self, process_name: str, *context_logger_args, **context_logger_kwargs) -> ContextLogger:
+        """Context Logger
+
+        Though one can suppress exceptions in the with block with the suppress key-word argument,
+        this is not intended to replace error handling
+
+        Args:
+            process_name (str): \
+                process name typically in the form of: task-<pipeline>#<process_desc>
+            mlflow_url (str, optional): \
+                url location of the process's MLflow artifacts (logs/metrics/model), by default None
+            suppress (bool, optional): \
+                suppress exceptions, by default False
+            lock : (Lock, optional): \
+                Optional lock for thread safety, by default None
+
+        Example:
+        
+        >>> from lumberjack import MetricsLogger
+        >>> metrics_logger = MetricsLogger()
+        >>> with metrics_logger.context("run#topic") as metrics_logger:
+        >>>     print(metrics_logger.__class__)
+        <class 'lumberjack.process_metrics.MetricsLogger'>
+
+        """
+        return ContextLogger(self, process_name, *context_logger_args, **context_logger_kwargs)
+
+
 
     def setup_metrics(self, process_name: str) -> None:
         """Initialize metrics object at the start of a process.
