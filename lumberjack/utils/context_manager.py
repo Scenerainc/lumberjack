@@ -21,12 +21,12 @@ if TYPE_CHECKING:
 class ContextLogger(AbstractContextManager):
     """Context Logger"""
 
-    process_name: str
     logger: "Union[T, MetricsLogger]"
+    process_name: str
 
-    mlflow_url: "Optional[str]" = None
-    suppress: bool = False
-    __lock: "Optional[_LockType]" = None
+    mlflow_url: "Optional[str]"
+    suppress: bool
+    __lock: "Optional[_LockType]"
 
     def __init__(
         # pylint: disable=R0913
@@ -46,7 +46,7 @@ class ContextLogger(AbstractContextManager):
         this is not intended to replace error handling
 
         Args:
-            metrics_logger (str): \
+            metrics_logger (MetricsLogger): \
                 Metrics logger 'parent' class
             process_name (str): \
                 process name typically in the form of: task-<pipeline>#<process_desc>
@@ -59,10 +59,7 @@ class ContextLogger(AbstractContextManager):
         """
         self.logger = metrics_logger
         self.process_name = process_name
-        self.suppress = suppress
-
         self.mlflow_url = mlflow_url
-
         self.suppress = suppress
         self.__lock = lock
 
