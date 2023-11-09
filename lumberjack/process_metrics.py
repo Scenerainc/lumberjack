@@ -120,7 +120,8 @@ class MetricsLogger(DefaultCredentials):
         Example:
         
         >>> from lumberjack import MetricsLogger
-        >>> with MetricsLogger.context("run#topic") as metrics_logger:
+        >>> metrics_logger = MetricsLogger()
+        >>> with metrics_logger.context("run#topic") as metrics_logger:
         >>>     print(metrics_logger.__class__)
         <class 'lumberjack.process_metrics.MetricsLogger'>
 
