@@ -11,17 +11,16 @@ if TYPE_CHECKING:
     # all this is only used for type annotations
     import threading, multiprocessing, asyncio  # pylint: disable=C0410
     from types import TracebackType
-    from typing import TypeVar, Union, Optional
+    from typing import Union, Optional
     from lumberjack import MetricsLogger
 
-    T = TypeVar("T", bound=MetricsLogger)
     _LockType = Union[threading.Lock, multiprocessing.Lock, asyncio.Lock]
 
 
 class ContextLogger(AbstractContextManager):
     """Context Logger"""
 
-    logger: "Union[T, MetricsLogger]"
+    logger: "MetricsLogger"
     process_name: str
 
     mlflow_url: "Optional[str]"
@@ -34,7 +33,7 @@ class ContextLogger(AbstractContextManager):
         # only 2 of them are required positional arguments
         # the rest is optional
         self,
-        metrics_logger: "Union[T, MetricsLogger]",
+        metrics_logger: "MetricsLogger",
         process_name: str,
         mlflow_url: str = None,
         suppress: bool = False,
@@ -63,7 +62,7 @@ class ContextLogger(AbstractContextManager):
         self.suppress = suppress
         self.__lock = lock
 
-    def __enter__(self) -> "Union[T, MetricsLogger]":
+    def __enter__(self) -> "MetricsLogger":
         """Enter the context"""
         if self.__lock:
             self.__lock.acquire(blocking=True)
