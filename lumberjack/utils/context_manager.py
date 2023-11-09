@@ -17,8 +17,6 @@ if TYPE_CHECKING:
     T = TypeVar("T", bound=MetricsLogger)
     _LockType = Union[threading.Lock, multiprocessing.Lock, asyncio.Lock]
 
-DEFAULT_LOCK = None
-
 
 class ContextLogger(AbstractContextManager):
     """Context Logger"""
