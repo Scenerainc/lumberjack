@@ -9,13 +9,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     # Removing the check will result in circular exports
     # all this is only used for type annotations
-    import threading, multiprocessing, asyncio  # pylint: disable=C0410
+    from threading import Lock
     from types import TracebackType
-    from typing import Union, Optional
+    from typing import Optional
     from lumberjack import MetricsLogger
-
-    _LockType = Union[threading.Lock, multiprocessing.Lock, asyncio.Lock]
-
 
 class ContextLogger(AbstractContextManager):
     """Context Logger"""
@@ -25,7 +22,7 @@ class ContextLogger(AbstractContextManager):
 
     mlflow_url: "Optional[str]"
     suppress: bool
-    __lock: "Optional[_LockType]"
+    __lock: "Optional[Lock]"
 
     def __init__(
         # pylint: disable=R0913
@@ -37,7 +34,7 @@ class ContextLogger(AbstractContextManager):
         process_name: str,
         mlflow_url: str = None,
         suppress: bool = False,
-        lock: "Optional[_LockType]" = None,
+        lock: "Optional[Lock]" = None,
     ):
         """Context Logger
 
