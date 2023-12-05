@@ -1,3 +1,4 @@
 azure-monitor-ingestion==1.0.0b1
 azure-identity==1.14.1
+azure-storage-blob==12.19.0
 pytest>=7.1.2
